@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/EmployeeCrud.Application/EmployeeCrud.Application.csproj" />
+    <Project Path="src/EmployeeCrud.Web/EmployeeCrud.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/EmployeeCrud.Tests/EmployeeCrud.Tests.csproj" />
+  </Folder>
+  <Folder Name="/database/">
+    <Project Path="database/EmployeeCrud.Database/EmployeeCrud.Database.sqlproj">
+      <Build />
+      <Deploy />
+    </Project>
+  </Folder>
+</Solution>

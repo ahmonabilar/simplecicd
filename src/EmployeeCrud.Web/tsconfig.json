@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "none",
+    "strict": true,
+    "outDir": "wwwroot/js"
+  },
+  "include": [
+    "Scripts/**/*.ts"
+  ]
+}

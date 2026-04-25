@@ -427,3 +427,11 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Local CLI/runtime artifacts
+.dotnet/
+src/EmployeeCrud.Web/employeecrud.db
+src/EmployeeCrud.Web/employeecrud.db-*
+src/EmployeeCrud.Web/logs/
+src/EmployeeCrud.Web/App_Data/DataProtectionKeys/
+tests/EmployeeCrud.Tests/TestResults/
