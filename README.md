@@ -51,3 +51,13 @@ dotnet test tests\EmployeeCrud.Tests\EmployeeCrud.Tests.csproj --configuration R
 ```
 
 The current suite covers the application layer at 100% line and branch coverage.
+
+## DevOps
+
+- Azure DevOps pipeline: `azure-pipelines.yml`
+- AKS Helm chart: `deploy/helm/employeecrud`
+- Docker image: `Dockerfile`
+- Azure setup guide: `docs/azure-devops-setup.md`
+- Local Minikube guide: `docs/local-minikube.md`
+
+The pipeline builds every branch, deploys `main` to test, and deploys `release` or `release/*` to production.

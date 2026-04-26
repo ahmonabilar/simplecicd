@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using EmployeeCrud.Application.Employees;
 
 namespace EmployeeCrud.Tests;
@@ -47,7 +48,7 @@ public sealed class EmployeeTests
         var exception = Assert.Throws<ArgumentException>(() =>
             new Employee(firstName, "Doe", "jane.doe@example.com", "Engineer", "Engineering", DateTime.Today, 100000m));
 
-        Assert.That(exception?.Message, Does.Contain(Employee.FirstNameMaxLength.ToString()));
+        Assert.That(exception?.Message, Does.Contain(Employee.FirstNameMaxLength.ToString(CultureInfo.InvariantCulture)));
     }
 
     [Test]

@@ -1,0 +1,20 @@
+replicaCount: 1
+
+image:
+  repository: employeecrud
+  pullPolicy: Never
+  tag: local
+
+aspnetcoreEnvironment: Development
+
+database:
+  provider: Sqlite
+  ensureCreatedOnStartup: true
+  connectionString: Data Source=/app/data/employeecrud.db
+  connectionStringSecretName: ""
+  connectionStringSecretKey: connectionString
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 8080

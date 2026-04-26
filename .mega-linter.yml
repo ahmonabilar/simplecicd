@@ -1,0 +1,8 @@
+APPLY_FIXES: none
+SHOW_ELAPSED_TIME: true
+PRINT_ALPACA: false
+FLAVOR_SUGGESTIONS: false
+VALIDATE_ALL_CODEBASE: true
+FILTER_REGEX_EXCLUDE: '(^|/)(bin|obj|TestResults|\.dotnet|src/EmployeeCrud.Web/wwwroot/lib)(/|$)'
+DISABLE_LINTERS:
+  - SPELL_CSPELL

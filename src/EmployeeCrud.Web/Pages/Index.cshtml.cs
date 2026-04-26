@@ -7,6 +7,18 @@ namespace EmployeeCrud.Web.Pages;
 
 public sealed class IndexModel(IEmployeeService employeeService, ILogger<IndexModel> logger) : PageModel
 {
+    private static readonly Action<ILogger, int, Exception?> EmployeeUpdated =
+        LoggerMessage.Define<int>(LogLevel.Information, new EventId(1000, nameof(EmployeeUpdated)), "Updated employee {EmployeeId}.");
+
+    private static readonly Action<ILogger, int, Exception?> EmployeeCreated =
+        LoggerMessage.Define<int>(LogLevel.Information, new EventId(1001, nameof(EmployeeCreated)), "Created employee {EmployeeId}.");
+
+    private static readonly Action<ILogger, int, Exception?> EmployeeDeleted =
+        LoggerMessage.Define<int>(LogLevel.Information, new EventId(1002, nameof(EmployeeDeleted)), "Deleted employee {EmployeeId}.");
+
+    private static readonly Action<ILogger, Exception?> EmployeeSaveFailed =
+        LoggerMessage.Define(LogLevel.Warning, new EventId(1003, nameof(EmployeeSaveFailed)), "Employee save failed.");
+
     public IReadOnlyList<Employee> Employees { get; private set; } = [];
 
     public Employee? SelectedEmployee { get; private set; }
@@ -49,19 +61,19 @@ public sealed class IndexModel(IEmployeeService employeeService, ILogger<IndexMo
                     return RedirectToPage();
                 }
 
-                logger.LogInformation("Updated employee {EmployeeId}.", employeeId);
+                EmployeeUpdated(logger, employeeId, null);
                 StatusMessage = $"{updatedEmployee.FullName} was updated.";
                 return RedirectToPage(new { viewId = employeeId });
             }
 
             var createdEmployee = await employeeService.CreateEmployeeAsync(Input);
-            logger.LogInformation("Created employee {EmployeeId}.", createdEmployee.Id);
+            EmployeeCreated(logger, createdEmployee.Id, null);
             StatusMessage = $"{createdEmployee.FullName} was added.";
             return RedirectToPage(new { viewId = createdEmployee.Id });
         }
         catch (Exception exception) when (exception is InvalidOperationException or ArgumentException or System.ComponentModel.DataAnnotations.ValidationException)
         {
-            logger.LogWarning(exception, "Employee save failed.");
+            EmployeeSaveFailed(logger, exception);
             ModelState.AddModelError(string.Empty, exception.Message);
             await LoadPageDataAsync(EmployeeId, viewId: null, preserveInput: true);
             return Page();
@@ -73,7 +85,7 @@ public sealed class IndexModel(IEmployeeService employeeService, ILogger<IndexMo
         var deleted = await employeeService.DeleteEmployeeAsync(id);
         if (deleted)
         {
-            logger.LogInformation("Deleted employee {EmployeeId}.", id);
+            EmployeeDeleted(logger, id, null);
             StatusMessage = "The employee was deleted.";
         }
         else

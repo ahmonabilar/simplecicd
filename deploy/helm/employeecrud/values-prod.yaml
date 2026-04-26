@@ -1,0 +1,21 @@
+replicaCount: 1
+
+aspnetcoreEnvironment: Production
+
+database:
+  provider: SqlServer
+  ensureCreatedOnStartup: false
+  connectionStringSecretName: employeecrud-db
+  connectionStringSecretKey: connectionString
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: "1"
+    memory: 768Mi
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1

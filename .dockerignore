@@ -1,0 +1,13 @@
+.git
+.dotnet
+.vs
+**/bin
+**/obj
+**/TestResults
+src/EmployeeCrud.Web/App_Data/DataProtectionKeys
+src/EmployeeCrud.Web/employeecrud.db
+src/EmployeeCrud.Web/employeecrud.db-*
+src/EmployeeCrud.Web/logs
+database/EmployeeCrud.Database/bin
+database/EmployeeCrud.Database/obj
+deploy/helm/**/charts

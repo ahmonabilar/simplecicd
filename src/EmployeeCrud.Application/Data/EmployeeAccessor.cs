@@ -11,7 +11,8 @@ public sealed class EmployeeAccessor(EmployeeDbContext dbContext) : IEmployeeAcc
             .AsNoTracking()
             .OrderBy(employee => employee.LastName)
             .ThenBy(employee => employee.FirstName)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     public Task<Employee?> FindAsync(int id, CancellationToken cancellationToken = default)
@@ -21,6 +22,8 @@ public sealed class EmployeeAccessor(EmployeeDbContext dbContext) : IEmployeeAcc
 
     public Task<bool> EmailExistsAsync(string email, int? excludingEmployeeId = null, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(email);
+
         var normalizedEmail = email.Trim().ToLowerInvariant();
 
         return dbContext.Employees.AnyAsync(
@@ -34,7 +37,7 @@ public sealed class EmployeeAccessor(EmployeeDbContext dbContext) : IEmployeeAcc
         ArgumentNullException.ThrowIfNull(employee);
 
         dbContext.Employees.Add(employee);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -47,7 +50,7 @@ public sealed class EmployeeAccessor(EmployeeDbContext dbContext) : IEmployeeAcc
         ArgumentNullException.ThrowIfNull(employee);
 
         dbContext.Employees.Remove(employee);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public Task<bool> HasAnyAsync(CancellationToken cancellationToken = default)
@@ -61,7 +64,7 @@ public sealed class EmployeeAccessor(EmployeeDbContext dbContext) : IEmployeeAcc
 
         var employeeList = employees.ToList();
         dbContext.Employees.AddRange(employeeList);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return employeeList.Count;
     }
 }

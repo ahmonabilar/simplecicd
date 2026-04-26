@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "employeecrud.fullname" . }}-config
+  labels:
+    {{- include "employeecrud.labels" . | nindent 4 }}
+data:
+  ASPNETCORE_ENVIRONMENT: {{ .Values.aspnetcoreEnvironment | quote }}
+  HttpsRedirection__Enabled: {{ .Values.httpsRedirection.enabled | quote }}
+  Database__Provider: {{ .Values.database.provider | quote }}
+  Database__EnsureCreatedOnStartup: {{ .Values.database.ensureCreatedOnStartup | quote }}
+  GrafanaLoki__Enabled: {{ .Values.grafanaLoki.enabled | quote }}
+  GrafanaLoki__Endpoint: {{ .Values.grafanaLoki.endpoint | quote }}
+  GrafanaLoki__Application: {{ .Values.grafanaLoki.application | quote }}

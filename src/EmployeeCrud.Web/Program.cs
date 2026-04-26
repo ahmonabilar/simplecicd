@@ -1,3 +1,4 @@
+using System.Globalization;
 using EmployeeCrud.Application.Data;
 using EmployeeCrud.Application.Services;
 using EmployeeCrud.Web.Logging;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
+    .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
     .CreateBootstrapLogger();
 
 try
@@ -28,6 +29,7 @@ try
     });
 
     builder.Services.AddRazorPages();
+    builder.Services.AddHealthChecks();
     builder.Services.AddDataProtection()
         .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "App_Data", "DataProtectionKeys")));
     builder.Services.AddDbContext<EmployeeDbContext>(options => ConfigureDatabase(options, builder.Configuration));
@@ -42,6 +44,10 @@ try
     {
         app.UseExceptionHandler("/Error");
         app.UseHsts();
+    }
+
+    if (app.Configuration.GetValue("HttpsRedirection:Enabled", false))
+    {
         app.UseHttpsRedirection();
     }
 
@@ -50,6 +56,7 @@ try
     app.UseSerilogRequestLogging();
     app.UseRouting();
 
+    app.MapHealthChecks("/healthz");
     app.MapRazorPages();
 
     await app.RunAsync();
@@ -94,5 +101,16 @@ static async Task InitializeDatabaseAsync(WebApplication app)
     var seededCount = await employeeService.SeedEmployeesAsync();
 
     var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("DatabaseInitialization");
-    logger.LogInformation("Database is ready. Seeded {SeededCount} employee records.", seededCount);
+    ApplicationLog.DatabaseReady(logger, seededCount);
+}
+
+internal static class ApplicationLog
+{
+    private static readonly Action<Microsoft.Extensions.Logging.ILogger, int, Exception?> DatabaseReadyMessage =
+        LoggerMessage.Define<int>(LogLevel.Information, new EventId(2000, nameof(DatabaseReady)), "Database is ready. Seeded {SeededCount} employee records.");
+
+    public static void DatabaseReady(Microsoft.Extensions.Logging.ILogger logger, int seededCount)
+    {
+        DatabaseReadyMessage(logger, seededCount, null);
+    }
 }
